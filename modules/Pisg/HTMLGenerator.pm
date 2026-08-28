@@ -241,21 +241,25 @@ sub _htmlheader
     my $title = $self->_template_text('pagetitle1', %hash);
     if($self->{cfg}->{colorscheme} ne "none") {
         _html( <<HTML );
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="$self->{cfg}->{lang}">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=$self->{cfg}->{charset}" />
-<title>$title</title>
+    <meta charset="$self->{cfg}->{charset}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>$title</title>
 $CSS
 </head>
 <body>
-<div align="center">
+<header>
+	<div class="container">
+		<h1>$title</h1>
+		<p>$self->_template_text('pagetitle2', %hash) <strong>$self->get_time()</strong></p>
+        <div class="stat-highlight">$self->_template_text('pagetitle3', %hash)</div>
+	</div>
+</header>
+<main class="container">
 HTML
     }
-    _html('<h1 class="title" id="pagetitle1">' . $title . '</h1>');
-    _html('<p class="subtitle"><span id="pagetitle2">' . $self->_template_text('pagetitle2', %hash) . ' ' . $self->get_time() . '</span><br />');
-    _html('<span id="pagetitle3">' . $self->_template_text('pagetitle3', %hash) . '</span></p>');
-
 }
 
 sub get_time
@@ -322,10 +326,13 @@ sub _htmlfooter
     my $stats_text = $self->_template_text('stats_gen_in', %hash);
 
     _html( <<HTML );
-<div id="footer" class="small">
-	<div id="stats_gen">$stats_gen</div>
-	<div id="stats_text">$stats_text</div>
-</div>
+</main>
+<footer>
+    <div class="container">
+    	<p>$stats_gen</p>
+        <p style="margin-top: 1rem; opacity: 0.8;">$stats_text</p>
+    </div>
+</footer>
 HTML
 
     _html( sprintf( qq(<!-- NFiles = "%s"; Format = "%s"; Lang = "%s"; LangFile = "%s"; Charset = "%s"; LogCharset = "%s"; LogCharsetFallback = "%s"; LogPrefix = "%s"; LogSuffix = "%s"; NickTracking = "%s"; TimeOffset = "%s" -->),
@@ -344,7 +351,6 @@ HTML
     
     if($self->{cfg}->{colorscheme} ne "none") {
         _html( <<HTML );
-</div>
 </body>
 </html>
 HTML
